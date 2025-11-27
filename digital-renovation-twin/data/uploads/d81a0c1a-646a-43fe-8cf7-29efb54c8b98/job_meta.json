@@ -1,0 +1,34 @@
+{
+  "job_id": "d81a0c1a-646a-43fe-8cf7-29efb54c8b98",
+  "status": "completed",
+  "uploaded_files": [
+    "ChatGPT Image Nov 26, 2025, 02_16_06 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_10 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_13 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_15 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_16 AM.png"
+  ],
+  "created_at": "2025-11-27T22:00:55.572854+00:00",
+  "updated_at": "2025-11-27T22:03:15.472315+00:00",
+  "outputs": {
+    "mesh": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/d81a0c1a-646a-43fe-8cf7-29efb54c8b98/placeholder_mesh.obj",
+    "damages": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/d81a0c1a-646a-43fe-8cf7-29efb54c8b98/damages.json",
+    "cost": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/d81a0c1a-646a-43fe-8cf7-29efb54c8b98/cost_estimate.json",
+    "risk": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/d81a0c1a-646a-43fe-8cf7-29efb54c8b98/risk_summary.json",
+    "report": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reports/d81a0c1a-646a-43fe-8cf7-29efb54c8b98.pdf",
+    "viewer_url": null,
+    "reconstruction_job": null,
+    "reconstruction_engine": "mock",
+    "reconstruction_workspace": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/d81a0c1a-646a-43fe-8cf7-29efb54c8b98",
+    "asset_url": null,
+    "asset_local_path": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/d81a0c1a-646a-43fe-8cf7-29efb54c8b98/placeholder_mesh.obj",
+    "reconstruction_error": "Mock engine forced for local development."
+  },
+  "error": null,
+  "reconstruction_engine": "mock",
+  "mesh_workspace_path": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/d81a0c1a-646a-43fe-8cf7-29efb54c8b98",
+  "reconstruction_error": "Mock engine forced for local development.",
+  "overall_risk_score": 24.0,
+  "overall_severity_index": 2.4,
+  "building_health_grade": "B"
+}

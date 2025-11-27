@@ -1,0 +1,54 @@
+{
+  "job_id": "b5af49e6-f300-4312-8d06-ae3258439f45",
+  "generated_at": "2025-11-27T07:41:04.307540+00:00",
+  "damages": [
+    {
+      "type": "mock_anomaly",
+      "severity": "medium",
+      "description": "Placeholder assessment for ChatGPT Image Nov 26, 2025, 02_16_06 AM.png (Vision API error)",
+      "approx_length_m": 1.0,
+      "confidence": 0.3,
+      "image": "ChatGPT Image Nov 26, 2025, 02_16_06 AM.png"
+    },
+    {
+      "type": "mock_anomaly",
+      "severity": "medium",
+      "description": "Placeholder assessment for ChatGPT Image Nov 26, 2025, 02_16_10 AM.png (Vision API error)",
+      "approx_length_m": 1.0,
+      "confidence": 0.3,
+      "image": "ChatGPT Image Nov 26, 2025, 02_16_10 AM.png"
+    },
+    {
+      "type": "mock_anomaly",
+      "severity": "medium",
+      "description": "Placeholder assessment for ChatGPT Image Nov 26, 2025, 02_16_13 AM.png (Vision API error)",
+      "approx_length_m": 1.0,
+      "confidence": 0.3,
+      "image": "ChatGPT Image Nov 26, 2025, 02_16_13 AM.png"
+    },
+    {
+      "type": "mock_anomaly",
+      "severity": "medium",
+      "description": "Placeholder assessment for ChatGPT Image Nov 26, 2025, 02_16_15 AM.png (Vision API error)",
+      "approx_length_m": 1.0,
+      "confidence": 0.3,
+      "image": "ChatGPT Image Nov 26, 2025, 02_16_15 AM.png"
+    },
+    {
+      "type": "mock_anomaly",
+      "severity": "medium",
+      "description": "Placeholder assessment for ChatGPT Image Nov 26, 2025, 02_16_16 AM.png (Vision API error)",
+      "approx_length_m": 1.0,
+      "confidence": 0.3,
+      "image": "ChatGPT Image Nov 26, 2025, 02_16_16 AM.png"
+    },
+    {
+      "type": "mock_anomaly",
+      "severity": "medium",
+      "description": "Placeholder assessment for job_meta.json (Vision API error)",
+      "approx_length_m": 1.0,
+      "confidence": 0.3,
+      "image": "job_meta.json"
+    }
+  ]
+}

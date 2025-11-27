@@ -1,0 +1,5 @@
+$ docker run --rm -v /Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data:/data graffitytech/colmap:3.8-cpu-ubuntu22.04 colmap feature_extractor --database_path /data/reconstructions/66391853-5bc5-42da-ad37-b49064035163/database.db --image_path /data/uploads/66391853-5bc5-42da-ad37-b49064035163
+[ERROR] COLMAP Docker failed: docker: failed to connect to the docker API at unix:///Users/alpozbay/.docker/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /Users/alpozbay/.docker/run/docker.sock: connect: no such file or directory
+
+Run 'docker run --help' for more information
+

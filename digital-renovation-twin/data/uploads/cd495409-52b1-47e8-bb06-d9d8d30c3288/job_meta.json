@@ -1,0 +1,18 @@
+{
+  "job_id": "cd495409-52b1-47e8-bb06-d9d8d30c3288",
+  "status": "failed",
+  "uploaded_files": [
+    "ChatGPT Image Nov 26, 2025, 02_16_06 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_10 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_13 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_15 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_16 AM.png"
+  ],
+  "created_at": "2025-11-27T07:08:07.770056+00:00",
+  "updated_at": "2025-11-27T07:08:09.198447+00:00",
+  "outputs": {},
+  "error": "Responses.create() got an unexpected keyword argument 'response_format'",
+  "reconstruction_engine": "mock",
+  "mesh_workspace_path": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/cd495409-52b1-47e8-bb06-d9d8d30c3288",
+  "reconstruction_error": "Mock engine forced for local development."
+}

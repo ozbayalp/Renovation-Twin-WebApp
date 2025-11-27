@@ -1,0 +1,27 @@
+$ docker run --rm -v /Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data:/data graffitytech/colmap:3.8-cpu-ubuntu22.04 colmap feature_extractor --database_path /data/reconstructions/1834cce1-f71e-4655-b7f6-1b09aa0c0ebb/database.db --image_path /data/uploads/1834cce1-f71e-4655-b7f6-1b09aa0c0ebb
+[ERROR] COLMAP Docker failed: qt.qpa.xcb: could not connect to display 
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, xcb.
+
+*** Aborted at 1764219319 (unix time) try "date -d @1764219319" if you are using GNU date ***
+PC: @                0x0 (unknown)
+*** SIGABRT (@0x1) received by PID 1 (TID 0x7ffff99490c0) from PID 1; stack trace: ***
+    @     0x7fffff6e1046 (unknown)
+    @     0x7ffffd732520 (unknown)
+    @     0x7ffffd786a7c pthread_kill
+    @     0x7ffffd732476 raise
+    @     0x7ffffd7187f3 abort
+    @     0x7ffffdda7ba3 QMessageLogger::fatal()
+    @     0x7ffffe3ae713 QGuiApplicationPrivate::createPlatformIntegration()
+    @     0x7ffffe3aec08 QGuiApplicationPrivate::createEventDispatcher()
+    @     0x7ffffdfd7b17 QCoreApplicationPrivate::init()
+    @     0x7ffffe3b1b70 QGuiApplicationPrivate::init()
+    @     0x7ffffeac5ced QApplicationPrivate::init()
+    @     0x5555556b428b colmap::RunFeatureExtractor()
+    @     0x5555556a3d33 main
+    @     0x7ffffd719d90 (unknown)
+    @     0x7ffffd719e40 __libc_start_main
+    @     0x5555556a78e5 _start
+

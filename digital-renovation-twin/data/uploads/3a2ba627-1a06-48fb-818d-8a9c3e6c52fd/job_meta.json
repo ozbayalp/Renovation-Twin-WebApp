@@ -1,0 +1,15 @@
+{
+  "job_id": "3a2ba627-1a06-48fb-818d-8a9c3e6c52fd",
+  "status": "failed",
+  "uploaded_files": [
+    "ChatGPT Image Nov 26, 2025, 02_16_06 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_10 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_13 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_15 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_16 AM.png"
+  ],
+  "created_at": "2025-11-26T07:23:47.939945+00:00",
+  "updated_at": "2025-11-26T07:23:49.720289+00:00",
+  "outputs": {},
+  "error": "Command failed (['colmap', 'feature_extractor', '--database_path=/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/3a2ba627-1a06-48fb-818d-8a9c3e6c52fd/colmap.db', '--image_path=/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/uploads/3a2ba627-1a06-48fb-818d-8a9c3e6c52fd']): Command '['colmap', 'feature_extractor', '--database_path=/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/3a2ba627-1a06-48fb-818d-8a9c3e6c52fd/colmap.db', '--image_path=/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/uploads/3a2ba627-1a06-48fb-818d-8a9c3e6c52fd']' died with <Signals.SIGABRT: 6>."
+}

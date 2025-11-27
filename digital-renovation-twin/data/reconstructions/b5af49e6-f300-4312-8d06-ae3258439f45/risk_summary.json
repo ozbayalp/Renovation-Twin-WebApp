@@ -1,0 +1,13 @@
+{
+  "job_id": "b5af49e6-f300-4312-8d06-ae3258439f45",
+  "total_damage_count": 6,
+  "overall_severity_index": 2.4,
+  "overall_risk_score": 24.0,
+  "building_health_grade": "B",
+  "by_type": {
+    "unknown": {
+      "count": 6,
+      "risk_points": 12.0
+    }
+  }
+}

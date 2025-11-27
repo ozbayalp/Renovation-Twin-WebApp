@@ -1,0 +1,15 @@
+{
+  "job_id": "a3a6f03f-407f-4daf-97a2-204caddf8186",
+  "status": "failed",
+  "uploaded_files": [
+    "ChatGPT Image Nov 26, 2025, 02_16_06 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_10 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_13 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_15 AM.png",
+    "ChatGPT Image Nov 26, 2025, 02_16_16 AM.png"
+  ],
+  "created_at": "2025-11-27T06:32:41.837715+00:00",
+  "updated_at": "2025-11-27T06:32:45.060423+00:00",
+  "outputs": {},
+  "error": "COLMAP reconstruction failed: docker: failed to connect to the docker API at unix:///Users/alpozbay/.docker/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /Users/alpozbay/.docker/run/docker.sock: connect: no such file or directory\n\nRun 'docker run --help' for more information\n"
+}

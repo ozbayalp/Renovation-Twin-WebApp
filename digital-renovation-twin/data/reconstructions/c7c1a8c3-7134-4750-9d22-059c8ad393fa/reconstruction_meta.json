@@ -1,0 +1,10 @@
+{
+  "engine": "mock",
+  "provider": "polycam",
+  "viewer_url": null,
+  "asset_url": null,
+  "asset_local_path": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/c7c1a8c3-7134-4750-9d22-059c8ad393fa/placeholder_mesh.obj",
+  "job_reference": null,
+  "mesh_workspace_path": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/c7c1a8c3-7134-4750-9d22-059c8ad393fa",
+  "error": "Mock reconstruction engine in use."
+}

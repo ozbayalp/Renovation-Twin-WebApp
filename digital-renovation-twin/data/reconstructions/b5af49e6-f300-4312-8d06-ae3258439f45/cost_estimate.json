@@ -1,0 +1,14 @@
+{
+  "job_id": "b5af49e6-f300-4312-8d06-ae3258439f45",
+  "currency": "USD",
+  "total_cost": 60.0,
+  "items": [
+    {
+      "type": "mock_anomaly",
+      "unit": "m2",
+      "count": 6,
+      "total_quantity": 6.0,
+      "cost": 60.0
+    }
+  ]
+}

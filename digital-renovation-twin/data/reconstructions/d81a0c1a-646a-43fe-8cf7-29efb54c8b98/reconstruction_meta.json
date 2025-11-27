@@ -1,0 +1,10 @@
+{
+  "engine": "mock",
+  "provider": "mock",
+  "viewer_url": null,
+  "asset_url": null,
+  "asset_local_path": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/d81a0c1a-646a-43fe-8cf7-29efb54c8b98/placeholder_mesh.obj",
+  "job_reference": null,
+  "mesh_workspace_path": "/Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/d81a0c1a-646a-43fe-8cf7-29efb54c8b98",
+  "error": "Mock engine forced for local development."
+}
