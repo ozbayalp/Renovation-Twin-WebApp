@@ -13,28 +13,28 @@ export function Footer() {
             </h4>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/about#risk-assessment"
                   className="text-[#525252] dark:text-[#999999] hover:text-[#111111] dark:hover:text-white text-sm transition-colors duration-200"
                 >
                   Risk Analysis
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/about#cost-estimation"
                   className="text-[#525252] dark:text-[#999999] hover:text-[#111111] dark:hover:text-white text-sm transition-colors duration-200"
                 >
                   Cost Estimation
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/about#reporting"
                   className="text-[#525252] dark:text-[#999999] hover:text-[#111111] dark:hover:text-white text-sm transition-colors duration-200"
                 >
                   Reporting
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

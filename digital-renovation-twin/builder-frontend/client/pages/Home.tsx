@@ -100,12 +100,10 @@ export default function Home() {
                 Intelligent Damage Detection
               </h2>
               <p className="text-lg text-[#525252] dark:text-[#999999] mb-8 leading-relaxed">
-                Our AI technology analyzes building facades with unprecedented
-                accuracy. Detect cracks, weathering, structural damage, and
-                deterioration patterns automatically.
+                Powered by OpenAI's Vision API (GPT-4o), our system performs multi-class defect classification on facade imagery. Images are base64-encoded and analyzed against a structured JSON schema that extracts damage type, severity level (low/medium/high), approximate measurements (length in meters, area in m²), and confidence scores. Detectable anomalies include cracks, spalling, concrete delamination, water damage streaks, discoloration, missing plaster, and corrosion.
               </p>
-              <a
-                href="#"
+              <Link
+                to="/about#damage-detection"
                 className="text-[#111111] dark:text-white font-medium text-base hover:underline inline-flex items-center gap-2"
               >
                 Learn more
@@ -122,7 +120,7 @@ export default function Home() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-              </a>
+              </Link>
             </div>
 
             {/* Right: Visual */}
@@ -182,12 +180,10 @@ export default function Home() {
                 Accurate Cost Estimation
               </h2>
               <p className="text-lg text-[#525252] dark:text-[#999999] mb-8 leading-relaxed">
-                Get precise repair cost estimates based on damage severity,
-                materials, and labor requirements. Plan budgets with confidence
-                using data-driven insights.
+                Cost estimation is driven by a configurable rate table that maps damage types to per-unit repair costs. Cracks are priced at $20/linear meter, spalling at $50/m², water damage at $15/m², and discoloration at $4/m². The engine aggregates detected quantities from the AI pipeline, computes itemized costs per damage category, and outputs a JSON summary with total estimated repair cost in USD.
               </p>
-              <a
-                href="#"
+              <Link
+                to="/about#cost-estimation"
                 className="text-[#111111] dark:text-white font-medium text-base hover:underline inline-flex items-center gap-2"
               >
                 Learn more
@@ -204,7 +200,7 @@ export default function Home() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -220,12 +216,10 @@ export default function Home() {
                 Comprehensive Risk Assessment
               </h2>
               <p className="text-lg text-[#525252] dark:text-[#999999] mb-8 leading-relaxed">
-                Understand structural risks and health grades. Our system
-                evaluates multiple risk factors to provide a complete picture of
-                building facade condition and safety.
+                Risk scoring employs weighted coefficients per damage type (cracks: 3.0, spalling: 4.0, corrosion: 4.5, water damage: 2.5) multiplied by severity factors (low: 0.8×, medium: 1.0×, high: 1.4×) and damage magnitude. The aggregate risk points are normalized to a 0-100 overall risk score and a 0-10 severity index. Building health grades are assigned via threshold mapping: A (&lt;20), B (20-39), C (40-69), D (≥70).
               </p>
-              <a
-                href="#"
+              <Link
+                to="/about#risk-assessment"
                 className="text-[#111111] dark:text-white font-medium text-base hover:underline inline-flex items-center gap-2"
               >
                 Learn more
@@ -242,7 +236,7 @@ export default function Home() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-              </a>
+              </Link>
             </div>
 
             {/* Right: Visual */}

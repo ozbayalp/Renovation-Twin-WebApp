@@ -3,33 +3,20 @@ import { Layout } from "@/components/Layout";
 import { useQuery } from "@tanstack/react-query";
 import { getAllJobs, JobStatus } from "@/lib/api";
 
-function getStatusBadgeColor(status: string): string {
-  switch (status) {
-    case "completed":
-      return "bg-[#E8F5E9] text-[#2E7D32] border-[#66BB6A]/30 dark:bg-[#1B5E20]/20 dark:text-[#66BB6A] dark:border-[#2E7D32]/30";
-    case "processing":
-      return "bg-[#FFF3E0] text-[#E65100] border-[#FFB74D]/30 dark:bg-[#E65100]/20 dark:text-[#FFB74D] dark:border-[#E65100]/30";
-    case "uploaded":
-      return "bg-[#E3F2FD] text-[#1565C0] border-[#64B5F6]/30 dark:bg-[#1565C0]/20 dark:text-[#64B5F6] dark:border-[#1565C0]/30";
-    case "failed":
-      return "bg-[#FFEBEE] text-[#C62828] border-[#EF5350]/30 dark:bg-[#C62828]/20 dark:text-[#EF5350] dark:border-[#C62828]/30";
-    default:
-      return "bg-[#F5F5F5] text-[#424242] dark:bg-[#333333] dark:text-[#BDBDBD]";
-  }
-}
+// Status is now plain text, no coloring needed
 
-function getHealthGradeColor(grade: string | null | undefined): string {
+function getHealthGradeBoxColor(grade: string | null | undefined): string {
   switch (grade) {
     case "A":
-      return "text-[#2E7D32] bg-[#E8F5E9] border border-[#66BB6A]/30 dark:bg-[#1B5E20]/20 dark:text-[#66BB6A]";
+      return "bg-[#2E7D32] dark:bg-[#66BB6A]";
     case "B":
-      return "text-[#1565C0] bg-[#E3F2FD] border border-[#64B5F6]/30 dark:bg-[#1565C0]/20 dark:text-[#64B5F6]";
+      return "bg-[#1565C0] dark:bg-[#64B5F6]";
     case "C":
-      return "text-[#E65100] bg-[#FFF3E0] border border-[#FFB74D]/30 dark:bg-[#E65100]/20 dark:text-[#FFB74D]";
+      return "bg-[#E65100] dark:bg-[#FFB74D]";
     case "D":
-      return "text-[#C62828] bg-[#FFEBEE] border border-[#EF5350]/30 dark:bg-[#C62828]/20 dark:text-[#EF5350]";
+      return "bg-[#C62828] dark:bg-[#EF5350]";
     default:
-      return "text-[#424242] bg-[#F5F5F5] dark:text-[#666666] dark:bg-[#333333]";
+      return "bg-[#9CA3AF] dark:bg-[#666666]";
   }
 }
 
@@ -186,18 +173,19 @@ export default function Dashboard() {
                           </span>
                         </td>
                         <td className="px-6 py-4 border-l border-[#E5E7EB] dark:border-[#333333]">
-                          <span
-                            className={`inline-block px-4 py-2 rounded-lg text-xs font-semibold border whitespace-nowrap ${getStatusBadgeColor(job.status)}`}
-                          >
+                          <span className="text-[#111111] dark:text-white text-sm font-medium">
                             {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
                           </span>
                         </td>
                         <td className="px-6 py-4 border-l border-[#E5E7EB] dark:border-[#333333]">
-                          <span
-                            className={`inline-block px-4 py-2 rounded-lg text-sm font-bold ${getHealthGradeColor(job.building_health_grade)}`}
-                          >
-                            {job.building_health_grade || "—"}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[#111111] dark:text-white text-sm font-bold">
+                              {job.building_health_grade || "—"}
+                            </span>
+                            {job.building_health_grade && (
+                              <span className={`w-3 h-4 rounded-sm ${getHealthGradeBoxColor(job.building_health_grade)}`} />
+                            )}
+                          </div>
                         </td>
                         <td className="px-6 py-4 border-l border-[#E5E7EB] dark:border-[#333333]">
                           <span className="text-[#111111] dark:text-white font-medium text-sm whitespace-nowrap">

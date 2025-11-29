@@ -273,7 +273,7 @@ export default function Upload() {
           </button>
 
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 mb-12">
             <div className="bg-white dark:bg-[#1a1a1a] border border-[#E5E7EB] dark:border-[#333333] rounded-lg p-6 hover:border-[#111111] dark:hover:border-white hover:shadow-lg transition-all duration-300">
               <div className="w-12 h-12 bg-[#F3F4F6] dark:bg-[#2a2a2a] rounded-lg flex items-center justify-center mb-4">
                 <svg
