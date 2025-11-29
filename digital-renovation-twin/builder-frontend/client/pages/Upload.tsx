@@ -62,7 +62,7 @@ export default function Upload() {
       const response = await uploadImages(files, label || undefined);
       toast({
         title: "Upload successful!",
-        description: `${response.uploaded_files.length} files uploaded. Job ID: ${response.job_id}`,
+        description: `${files.length} file(s) uploaded. Job ID: ${response.job_id}`,
       });
       // Navigate to results page
       navigate(`/results/${response.job_id}`);
@@ -358,12 +358,12 @@ export default function Upload() {
 
           {/* Skip Link */}
           <div className="mt-12 text-center">
-            <p className="text-[#525252] mb-4">
+            <p className="text-[#525252] dark:text-[#999999] mb-4">
               Want to view existing assessments?
             </p>
             <Link
               to="/dashboard"
-              className="text-[#111111] font-medium hover:underline"
+              className="text-[#111111] dark:text-white font-medium hover:underline"
             >
               Go to Dashboard
             </Link>

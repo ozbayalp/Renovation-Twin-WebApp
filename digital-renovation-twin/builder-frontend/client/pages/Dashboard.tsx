@@ -1,7 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
-import { useQuery } from "@tanstack/react-query";
-import { getAllJobs, JobStatus } from "@/lib/api";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getAllJobs, renameJob, deleteJob, deleteAllJobs, JobStatus } from "@/lib/api";
+import { useState, useRef, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 // Status is now plain text, no coloring needed
 
@@ -32,11 +34,96 @@ function formatDate(dateStr?: string | null): string {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  
+  // Menu state
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [renameJobId, setRenameJobId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+  const menuRef = useRef<HTMLDivElement>(null);
   
   const { data: jobs, isLoading, error, refetch } = useQuery({
     queryKey: ["jobs"],
     queryFn: getAllJobs,
   });
+
+  // Mutations
+  const renameMutation = useMutation({
+    mutationFn: ({ jobId, label }: { jobId: string; label: string }) => renameJob(jobId, label),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      toast({ title: "Renamed successfully" });
+      setRenameDialogOpen(false);
+      setRenameJobId(null);
+      setRenameValue("");
+    },
+    onError: (err) => {
+      toast({ title: "Failed to rename", description: err instanceof Error ? err.message : "Unknown error", variant: "destructive" });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (jobId: string) => deleteJob(jobId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      toast({ title: "Deleted successfully" });
+    },
+    onError: (err) => {
+      toast({ title: "Failed to delete", description: err instanceof Error ? err.message : "Unknown error", variant: "destructive" });
+    },
+  });
+
+  const clearAllMutation = useMutation({
+    mutationFn: () => deleteAllJobs(),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      toast({ title: "Cleared all assessments", description: `${data.deleted_count} assessment(s) removed` });
+    },
+    onError: (err) => {
+      toast({ title: "Failed to clear", description: err instanceof Error ? err.message : "Unknown error", variant: "destructive" });
+    },
+  });
+
+  const handleClearAll = () => {
+    if (confirm("Are you sure you want to delete ALL assessments? This action cannot be undone.")) {
+      clearAllMutation.mutate();
+    }
+  };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setOpenMenuId(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleRenameClick = (job: JobStatus, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setRenameJobId(job.job_id);
+    setRenameValue(job.label || "");
+    setRenameDialogOpen(true);
+    setOpenMenuId(null);
+  };
+
+  const handleDeleteClick = (jobId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (confirm("Are you sure you want to delete this assessment? This action cannot be undone.")) {
+      deleteMutation.mutate(jobId);
+    }
+    setOpenMenuId(null);
+  };
+
+  const handleRenameSubmit = () => {
+    if (renameJobId && renameValue.trim()) {
+      renameMutation.mutate({ jobId: renameJobId, label: renameValue.trim() });
+    }
+  };
 
   const isEmpty = !jobs || jobs.length === 0;
 
@@ -45,13 +132,29 @@ export default function Dashboard() {
       {/* Hero Section */}
       <section className="bg-white dark:bg-[#0a0a0a] border-b border-[#E5E7EB] dark:border-[#333333]">
         <div className="max-w-7xl mx-auto px-6 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#111111] dark:text-white mb-4">
-            All Assessments
-          </h1>
-          <p className="text-lg text-[#525252] dark:text-[#999999]">
-            View and manage all your building facade analyses in one place.
-            Track progress, access reports, and monitor risk levels.
-          </p>
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold text-[#111111] dark:text-white mb-4">
+                All Assessments
+              </h1>
+              <p className="text-lg text-[#525252] dark:text-[#999999]">
+                View and manage all your building facade analyses in one place.
+                Track progress, access reports, and monitor risk levels.
+              </p>
+            </div>
+            {!isEmpty && (
+              <button
+                onClick={handleClearAll}
+                disabled={clearAllMutation.isPending}
+                className="flex items-center gap-2 px-4 py-2 border border-[#E5E7EB] dark:border-[#333333] rounded-lg text-sm font-medium text-[#525252] dark:text-[#999999] hover:text-[#DC2626] hover:border-[#DC2626] dark:hover:text-[#EF4444] dark:hover:border-[#EF4444] transition-colors duration-200 disabled:opacity-50"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                {clearAllMutation.isPending ? "Clearing..." : "Clear All"}
+              </button>
+            )}
+          </div>
         </div>
       </section>
 
@@ -158,6 +261,9 @@ export default function Dashboard() {
                       <th className="px-6 py-3 text-left text-xs font-semibold text-[#111111] dark:text-white tracking-wide border-l border-[#E5E7EB] dark:border-[#333333]">
                         DATE
                       </th>
+                      <th className="px-3 py-3 text-left text-xs font-semibold text-[#111111] dark:text-white tracking-wide border-l border-[#E5E7EB] dark:border-[#333333]">
+                        
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#E5E7EB] dark:divide-[#333333]">
@@ -204,6 +310,43 @@ export default function Dashboard() {
                             {formatDate(job.created_at)}
                           </span>
                         </td>
+                        <td className="px-3 py-4 border-l border-[#E5E7EB] dark:border-[#333333]">
+                          <div className="relative" ref={openMenuId === job.job_id ? menuRef : null}>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenMenuId(openMenuId === job.job_id ? null : job.job_id);
+                              }}
+                              className="p-1 rounded hover:bg-[#F3F4F6] dark:hover:bg-[#333333] transition-colors"
+                            >
+                              <svg className="w-5 h-5 text-[#525252] dark:text-[#999999]" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                              </svg>
+                            </button>
+                            {openMenuId === job.job_id && (
+                              <div className="absolute right-0 mt-1 w-36 bg-white dark:bg-[#1a1a1a] border border-[#E5E7EB] dark:border-[#333333] rounded-lg shadow-lg z-50">
+                                <button
+                                  onClick={(e) => handleRenameClick(job, e)}
+                                  className="w-full px-4 py-2 text-left text-sm text-[#111111] dark:text-white hover:bg-[#F3F4F6] dark:hover:bg-[#252525] rounded-t-lg flex items-center gap-2"
+                                >
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                  </svg>
+                                  Rename
+                                </button>
+                                <button
+                                  onClick={(e) => handleDeleteClick(job.job_id, e)}
+                                  className="w-full px-4 py-2 text-left text-sm text-[#DC2626] hover:bg-[#FEF2F2] dark:hover:bg-[#450A0A] rounded-b-lg flex items-center gap-2"
+                                >
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                  Delete
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -213,6 +356,45 @@ export default function Dashboard() {
           )}
         </div>
       </section>
+
+      {/* Rename Dialog */}
+      {renameDialogOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setRenameDialogOpen(false)}>
+          <div 
+            className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-[#E5E7EB] dark:border-[#333333] p-6 w-full max-w-md mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-bold text-[#111111] dark:text-white mb-4">Rename Assessment</h3>
+            <input
+              type="text"
+              value={renameValue}
+              onChange={(e) => setRenameValue(e.target.value)}
+              placeholder="Enter new name"
+              className="w-full px-4 py-2 bg-white dark:bg-[#0a0a0a] border border-[#E5E7EB] dark:border-[#333333] rounded-lg text-[#111111] dark:text-white placeholder:text-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white mb-4"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleRenameSubmit();
+                if (e.key === "Escape") setRenameDialogOpen(false);
+              }}
+            />
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setRenameDialogOpen(false)}
+                className="px-4 py-2 text-[#525252] dark:text-[#999999] hover:text-[#111111] dark:hover:text-white transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRenameSubmit}
+                disabled={renameMutation.isPending || !renameValue.trim()}
+                className="px-4 py-2 bg-[#111111] dark:bg-white text-white dark:text-[#111111] rounded-lg font-medium hover:bg-[#1a1a1a] dark:hover:bg-[#f0f0f0] transition-all duration-200 disabled:opacity-50"
+              >
+                {renameMutation.isPending ? "Saving..." : "Save"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }

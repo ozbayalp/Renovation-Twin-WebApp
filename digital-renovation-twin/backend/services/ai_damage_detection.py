@@ -14,13 +14,29 @@ from backend.core.config import RECONSTRUCTIONS_DIR, UPLOADS_DIR
 VISION_MODEL = os.getenv("OPENAI_VISION_MODEL", "gpt-4o-mini")
 logger = logging.getLogger(__name__)
 
-PROMPT = """You are an expert facade inspector. Analyze the provided building exterior photo
-and identify cracks, spalling or concrete delamination, water damage/streaks,
-discoloration or missing plaster, and any other significant defects visible from
-the street. Provide concise measurements (length in meters for cracks, affected
-area in square meters for surface damage) using the photo context for an
-approximation. Include a severity (low/medium/high) based on likely repair cost
-and urgency. Respond strictly using the provided JSON schema."""
+PROMPT = """You are an expert facade inspector. Analyze the provided building exterior photo and identify all visible damage including:
+- Cracks (hairline, structural, settlement)
+- Spalling or concrete delamination
+- Water damage, moisture stains, or efflorescence
+- Discoloration, staining, or missing plaster
+- Corrosion or rust staining
+- Any other significant facade defects
+
+For each damage found, estimate:
+- Approximate length in meters (for linear damage like cracks)
+- Approximate affected area in square meters (for surface damage)
+- Severity: "low" (cosmetic), "medium" (requires attention), or "high" (urgent repair needed)
+- Confidence score from 0.0 to 1.0
+
+Respond with a JSON object containing a "damages" array. Each damage entry must have:
+- "type": string (e.g., "crack", "spalling", "water_damage", "discoloration", "corrosion")
+- "severity": "low" | "medium" | "high"
+- "description": brief description of the damage and location
+- "approx_length_m": number (optional, for linear damage)
+- "approx_area_m2": number (optional, for surface damage)
+- "confidence": number between 0 and 1
+
+If no damage is visible, return {"damages": []}."""
 
 
 class DamageDetectionError(RuntimeError):
@@ -87,35 +103,36 @@ def _json_schema() -> Dict:
 
 
 def _extract_response_text(response) -> str:
-    output = getattr(response, "output", None) or []
-    for item in output:
-        contents = getattr(item, "content", []) or []
-        for chunk in contents:
-            if getattr(chunk, "type", None) == "output_text":
-                return chunk.text
-    # Fallback to legacy API response format
-    text = getattr(response, "output_text", None)
-    if text:
-        return text
+    """Extract text content from OpenAI Chat Completions response."""
+    try:
+        # Standard Chat Completions API response format
+        message = response.choices[0].message
+        content = message.content
+        if content:
+            return content
+    except (AttributeError, IndexError):
+        pass
     raise DamageDetectionError("Vision API response did not contain output text.")
 
 
 def _analyze_image(client, image_path: Path) -> List[Dict]:
+    """Analyze a single image using OpenAI's Vision API."""
     image_data_url = _encode_image(image_path)
     try:
-        response = client.responses.create(
+        response = client.chat.completions.create(
             model=VISION_MODEL,
             temperature=0.2,
-            max_output_tokens=800,
-            input=[
+            max_tokens=800,
+            messages=[
                 {
                     "role": "user",
                     "content": [
-                        {"type": "input_text", "text": PROMPT},
-                        {"type": "input_image", "image_url": image_data_url},
+                        {"type": "text", "text": PROMPT},
+                        {"type": "image_url", "image_url": {"url": image_data_url}},
                     ],
                 }
             ],
+            response_format={"type": "json_object"},
         )
     except Exception as exc:  # pragma: no cover - network failure path
         raise DamageDetectionError(f"Vision API call failed: {exc}") from exc

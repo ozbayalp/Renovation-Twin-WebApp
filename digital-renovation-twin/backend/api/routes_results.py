@@ -21,6 +21,37 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+@router.get("/jobs")
+def list_jobs():
+    jobs = job_metadata.list_jobs()
+    response = []
+    for meta in jobs:
+        outputs = meta.get("outputs", {}) or {}
+        cost_path = outputs.get("cost")
+        estimated_cost = None
+        if cost_path:
+            try:
+                cost_file = Path(cost_path)
+                if cost_file.exists():
+                    with cost_file.open("r", encoding="utf-8") as fp:
+                        estimated_cost = json.load(fp).get("total_cost")
+            except (json.JSONDecodeError, OSError):
+                estimated_cost = None
+        response.append(
+            {
+                "job_id": meta.get("job_id"),
+                "label": meta.get("label"),
+                "created_at": meta.get("created_at"),
+                "status": meta.get("status"),
+                "building_health_grade": meta.get("building_health_grade"),
+                "overall_risk_score": meta.get("overall_risk_score"),
+                "total_estimated_cost": estimated_cost,
+                "uploaded_files": meta.get("uploaded_files", []),
+            }
+        )
+    return response
+
+
 @router.get("/jobs/{job_id}")
 def get_job(job_id: str):
     if not job_metadata.job_exists(job_id):
@@ -139,3 +170,33 @@ def verify_images(job_id: str):
     except ImageValidationError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
     return {"job_id": job_id, "results": results}
+
+
+@router.patch("/jobs/{job_id}")
+def rename_job(job_id: str, label: str):
+    """Rename a job by updating its label."""
+    if not job_metadata.job_exists(job_id):
+        raise HTTPException(status_code=404, detail="Job not found")
+    try:
+        metadata = job_metadata.rename_job(job_id, label)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Job metadata not found")
+    return metadata
+
+
+@router.delete("/jobs/{job_id}")
+def delete_job(job_id: str):
+    """Delete a job and all its associated files."""
+    if not job_metadata.job_exists(job_id):
+        raise HTTPException(status_code=404, detail="Job not found")
+    success = job_metadata.delete_job(job_id)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to delete job")
+    return {"message": "Job deleted successfully", "job_id": job_id}
+
+
+@router.delete("/jobs")
+def delete_all_jobs():
+    """Delete all jobs."""
+    count = job_metadata.delete_all_jobs()
+    return {"message": f"Deleted {count} job(s)", "deleted_count": count}

@@ -123,25 +123,43 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Right: Visual */}
-            <div className="bg-[#F3F4F6] dark:bg-[#1a1a1a] rounded-lg p-8 aspect-square flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-24 h-24 bg-[#111111] dark:bg-white rounded-lg mx-auto mb-4 flex items-center justify-center">
-                  <svg
-                    className="w-12 h-12 text-white dark:text-[#111111]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m11-11a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <p className="text-[#525252] dark:text-[#999999] font-medium">Damage Detection</p>
+            {/* Right: Visual - Building with Scan Lines */}
+            <div className="bg-[#F3F4F6] dark:bg-[#1a1a1a] rounded-xl p-6 aspect-square flex items-center justify-center relative overflow-hidden">
+              {/* Scan lines animation */}
+              <div className="absolute inset-0 opacity-20">
+                <div className="absolute top-1/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#3B82F6] to-transparent animate-pulse" />
+                <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#10B981] to-transparent animate-pulse delay-75" />
+                <div className="absolute top-3/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#F59E0B] to-transparent animate-pulse delay-150" />
+              </div>
+              
+              {/* Building facade illustration */}
+              <div className="relative flex flex-col items-center">
+                <svg className="w-72 h-72" viewBox="0 0 200 200" fill="none">
+                  {/* Building outline */}
+                  <rect x="30" y="15" width="140" height="170" rx="4" className="stroke-[#111111] dark:stroke-white" strokeWidth="2" fill="none" />
+                  {/* Windows grid - 3x3, evenly spaced */}
+                  {[0, 1, 2].map((row) => (
+                    [0, 1, 2].map((col) => (
+                      <rect 
+                        key={`${row}-${col}`}
+                        x={45 + col * 42} 
+                        y={28 + row * 42} 
+                        width="28" 
+                        height="32" 
+                        rx="3" 
+                        className="fill-[#E5E7EB] dark:fill-[#333333] stroke-[#111111] dark:stroke-white" 
+                        strokeWidth="1.5"
+                      />
+                    ))
+                  ))}
+                  {/* Detection markers - centered in windows */}
+                  <circle cx={45 + 14} cy={28 + 16} r="10" className="fill-[#EF4444]/20 stroke-[#EF4444]" strokeWidth="2" />
+                  <circle cx={45 + 2*42 + 14} cy={28 + 42 + 16} r="10" className="fill-[#F59E0B]/20 stroke-[#F59E0B]" strokeWidth="2" />
+                  <circle cx={45 + 42 + 14} cy={28 + 2*42 + 16} r="10" className="fill-[#10B981]/20 stroke-[#10B981]" strokeWidth="2" />
+                  {/* Door - positioned below the window grid */}
+                  <rect x="82" y="158" width="36" height="27" rx="3" className="fill-[#111111] dark:fill-white" />
+                </svg>
+                <p className="text-[#525252] dark:text-[#999999] font-medium mt-2">AI-Powered Scanning</p>
               </div>
             </div>
           </div>
@@ -152,25 +170,39 @@ export default function Home() {
       <section className="bg-white dark:bg-[#0a0a0a] py-20 border-t border-[#E5E7EB] dark:border-[#333333]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* Left: Visual */}
-            <div className="bg-[#F3F4F6] dark:bg-[#1a1a1a] rounded-lg p-8 aspect-square flex items-center justify-center order-2 md:order-1">
-              <div className="text-center">
-                <div className="w-24 h-24 bg-[#111111] dark:bg-white rounded-lg mx-auto mb-4 flex items-center justify-center">
-                  <svg
-                    className="w-12 h-12 text-white dark:text-[#111111]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+            {/* Left: Visual - Cost Breakdown Chart */}
+            <div className="bg-[#F3F4F6] dark:bg-[#1a1a1a] rounded-xl p-6 aspect-square flex items-center justify-center order-2 md:order-1 relative overflow-hidden">
+              <div className="relative w-full max-w-[340px] border border-[#111111]/10 dark:border-white/10 rounded-2xl p-8 bg-white/30 dark:bg-white/5">
+                {/* Mock cost breakdown bars */}
+                <div className="space-y-5">
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-[#525252] dark:text-[#999999] w-20">Cracks</span>
+                    <div className="flex-1 h-8 bg-[#E5E7EB] dark:bg-[#333333] rounded-full overflow-hidden">
+                      <div className="h-full w-3/4 bg-gradient-to-r from-[#3B82F6] to-[#60A5FA] rounded-full" />
+                    </div>
+                    <span className="text-sm font-mono font-medium text-[#111111] dark:text-white w-12 text-right">$240</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-[#525252] dark:text-[#999999] w-20">Spalling</span>
+                    <div className="flex-1 h-8 bg-[#E5E7EB] dark:bg-[#333333] rounded-full overflow-hidden">
+                      <div className="h-full w-1/2 bg-gradient-to-r from-[#F59E0B] to-[#FBBF24] rounded-full" />
+                    </div>
+                    <span className="text-sm font-mono font-medium text-[#111111] dark:text-white w-12 text-right">$150</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-[#525252] dark:text-[#999999] w-20">Water</span>
+                    <div className="flex-1 h-8 bg-[#E5E7EB] dark:bg-[#333333] rounded-full overflow-hidden">
+                      <div className="h-full w-1/4 bg-gradient-to-r from-[#10B981] to-[#34D399] rounded-full" />
+                    </div>
+                    <span className="text-sm font-mono font-medium text-[#111111] dark:text-white w-12 text-right">$60</span>
+                  </div>
                 </div>
-                <p className="text-[#525252] dark:text-[#999999] font-medium">Cost Analysis</p>
+                {/* Total */}
+                <div className="mt-8 pt-5 border-t border-[#E5E7EB] dark:border-[#333333] flex justify-between items-center">
+                  <span className="text-base font-medium text-[#525252] dark:text-[#999999]">Total Estimate</span>
+                  <span className="text-2xl font-bold text-[#111111] dark:text-white">$450</span>
+                </div>
+                <p className="text-center mt-6 text-[#525252] dark:text-[#999999] font-medium">Itemized Breakdown</p>
               </div>
             </div>
 
@@ -239,25 +271,51 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Right: Visual */}
-            <div className="bg-[#F3F4F6] dark:bg-[#1a1a1a] rounded-lg p-8 aspect-square flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-24 h-24 bg-[#111111] dark:bg-white rounded-lg mx-auto mb-4 flex items-center justify-center">
-                  <svg
-                    className="w-12 h-12 text-white dark:text-[#111111]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
+            {/* Right: Visual - Risk Dashboard */}
+            <div className="bg-[#F3F4F6] dark:bg-[#1a1a1a] rounded-xl p-6 aspect-square flex items-center justify-center relative overflow-hidden">
+              <div className="relative w-full max-w-[280px]">
+                {/* Health Grade Circle */}
+                <div className="flex justify-center mb-8">
+                  <div className="relative w-36 h-36">
+                    <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="40" className="stroke-[#E5E7EB] dark:stroke-[#333333]" strokeWidth="8" fill="none" />
+                      <circle 
+                        cx="50" cy="50" r="40" 
+                        className="stroke-[#1565C0]" 
+                        strokeWidth="8" 
+                        fill="none" 
+                        strokeDasharray="251.2" 
+                        strokeDashoffset="75" 
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-4xl font-bold text-[#1565C0]">B</span>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-[#525252] dark:text-[#999999] font-medium">Risk Analysis</p>
+                
+                {/* Risk Metrics */}
+                <div className="grid grid-cols-2 gap-5">
+                  <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-4 text-center border border-[#E5E7EB] dark:border-[#333333]">
+                    <div className="text-2xl font-bold text-[#111111] dark:text-white">24</div>
+                    <div className="text-sm text-[#525252] dark:text-[#999999]">Risk Score</div>
+                  </div>
+                  <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-4 text-center border border-[#E5E7EB] dark:border-[#333333]">
+                    <div className="text-2xl font-bold text-[#111111] dark:text-white">4.8</div>
+                    <div className="text-sm text-[#525252] dark:text-[#999999]">Severity</div>
+                  </div>
+                </div>
+                
+                {/* Grade Legend */}
+                <div className="flex justify-center gap-3 mt-6">
+                  <span className="w-5 h-5 rounded bg-[#2E7D32]" title="Grade A" />
+                  <span className="w-5 h-5 rounded bg-[#1565C0] ring-2 ring-[#1565C0] ring-offset-2 ring-offset-[#F3F4F6] dark:ring-offset-[#1a1a1a]" title="Grade B" />
+                  <span className="w-5 h-5 rounded bg-[#E65100]" title="Grade C" />
+                  <span className="w-5 h-5 rounded bg-[#C62828]" title="Grade D" />
+                </div>
+                
+                <p className="text-center mt-5 text-[#525252] dark:text-[#999999] font-medium">Health Dashboard</p>
               </div>
             </div>
           </div>
@@ -265,8 +323,8 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-[#F9FAFB] dark:bg-[#0a0a0a] py-24 border-t border-[#E5E7EB] dark:border-[#333333]">
-        <div className="max-w-3xl mx-auto px-6 text-center">
+      <section className="bg-[#F9FAFB] dark:bg-[#0a0a0a] py-32 border-t border-[#E5E7EB] dark:border-[#333333]">
+        <div className="max-w-7xl mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-[#111111] dark:text-white mb-6">
             Ready to analyze your building?
           </h2>

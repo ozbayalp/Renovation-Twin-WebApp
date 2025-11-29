@@ -83,7 +83,7 @@ export async function uploadImages(
     formData.append("label", label);
   }
 
-  const response = await fetch(`${API_BASE_URL}/upload`, {
+  const response = await fetch(`${API_BASE_URL}/jobs`, {
     method: "POST",
     body: formData,
   });
@@ -131,7 +131,9 @@ export async function getAllJobs(): Promise<JobStatus[]> {
  * Verify uploaded images before processing
  */
 export async function verifyJobImages(jobId: string): Promise<ImageVerificationResult> {
-  const response = await fetch(`${API_BASE_URL}/jobs/${jobId}/verify`);
+  const response = await fetch(`${API_BASE_URL}/jobs/${jobId}/verify-images`, {
+    method: "POST",
+  });
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ detail: "Verification failed" }));
@@ -201,5 +203,53 @@ export async function checkHealth(): Promise<{ status: string }> {
   if (!response.ok) {
     throw new Error("Backend is not healthy");
   }
+  return response.json();
+}
+
+/**
+ * Rename a job (update its label)
+ */
+export async function renameJob(jobId: string, label: string): Promise<JobStatus> {
+  const response = await fetch(`${API_BASE_URL}/jobs/${jobId}?label=${encodeURIComponent(label)}`, {
+    method: "PATCH",
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ detail: "Rename failed" }));
+    throw new Error(error.detail || "Failed to rename job");
+  }
+
+  return response.json();
+}
+
+/**
+ * Delete a job
+ */
+export async function deleteJob(jobId: string): Promise<{ message: string; job_id: string }> {
+  const response = await fetch(`${API_BASE_URL}/jobs/${jobId}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ detail: "Delete failed" }));
+    throw new Error(error.detail || "Failed to delete job");
+  }
+
+  return response.json();
+}
+
+/**
+ * Delete all jobs
+ */
+export async function deleteAllJobs(): Promise<{ message: string; deleted_count: number }> {
+  const response = await fetch(`${API_BASE_URL}/jobs`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ detail: "Clear all failed" }));
+    throw new Error(error.detail || "Failed to clear all jobs");
+  }
+
   return response.json();
 }

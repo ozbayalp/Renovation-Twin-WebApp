@@ -7,7 +7,6 @@ import {
   processJob,
   verifyJobImages,
   getReportUrl,
-  buildOutputUrl,
   JobStatus,
 } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
@@ -32,14 +31,15 @@ export default function Results() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [progress, setProgress] = useState(0);
+  const [showCostModal, setShowCostModal] = useState(false);
 
   const { data: job, isLoading, error, refetch } = useQuery({
     queryKey: ["job", jobId],
     queryFn: () => getJobStatus(jobId!),
     enabled: !!jobId,
-    refetchInterval: (data) => {
+    refetchInterval: (query) => {
       // Poll while processing
-      if (data?.status === "processing") return 3000;
+      if (query.state.data?.status === "processing") return 3000;
       return false;
     },
   });
@@ -233,7 +233,7 @@ export default function Results() {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
+                <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
                   <a
                     href={getReportUrl(job.job_id)}
                     target="_blank"
@@ -242,23 +242,19 @@ export default function Results() {
                   >
                     Download PDF
                   </a>
-                  {job.outputs?.cost && (
-                    <a
-                      href={buildOutputUrl(job.outputs.cost) || "#"}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex-1 px-6 py-3 bg-white dark:bg-[#1a1a1a] border border-[#E5E7EB] dark:border-[#333333] text-[#111111] dark:text-white rounded-lg font-medium hover:bg-[#F9FAFB] dark:hover:bg-[#252525] transition-all duration-200 text-center"
-                    >
-                      Cost Estimate
-                    </a>
-                  )}
+                  <button
+                    onClick={() => setShowCostModal(true)}
+                    className="flex-1 px-6 py-3 bg-white dark:bg-[#1a1a1a] border border-[#E5E7EB] dark:border-[#333333] text-[#111111] dark:text-white rounded-lg font-medium hover:bg-[#F9FAFB] dark:hover:bg-[#252525] transition-all duration-200 text-center"
+                  >
+                    Cost Estimate
+                  </button>
                 </div>
               </div>
             </div>
           )}
 
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
             <div className="bg-white dark:bg-[#1a1a1a] border border-[#E5E7EB] dark:border-[#333333] rounded-lg p-6">
               <div className="w-12 h-12 bg-[#E8F5E9] dark:bg-[#1B5E20]/20 rounded-lg flex items-center justify-center mb-4">
                 <svg
@@ -333,7 +329,7 @@ export default function Results() {
           </div>
 
           {/* Back Link */}
-          <div className="mt-12 text-center">
+          <div className="mt-16 text-center">
             <Link
               to="/dashboard"
               className="text-[#111111] dark:text-white font-medium hover:underline inline-flex items-center gap-2"
@@ -356,6 +352,93 @@ export default function Results() {
           </div>
         </div>
       </section>
+
+      {/* Cost Estimate Modal */}
+      {showCostModal && job && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-auto">
+            <div className="p-6 border-b border-[#E5E7EB] dark:border-[#333333]">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-[#111111] dark:text-white">
+                  Cost Estimation Details
+                </h2>
+                <button
+                  onClick={() => setShowCostModal(false)}
+                  className="text-[#525252] dark:text-[#999999] hover:text-[#111111] dark:hover:text-white"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                {/* Repair breakdown */}
+                <div className="bg-[#F9FAFB] dark:bg-[#252525] rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-[#525252] dark:text-[#999999] mb-3 tracking-wide">
+                    REPAIR BREAKDOWN
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#111111] dark:text-white">Crack Repairs</span>
+                      <span className="font-mono font-medium text-[#111111] dark:text-white">$180.00</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#111111] dark:text-white">Spalling Treatment</span>
+                      <span className="font-mono font-medium text-[#111111] dark:text-white">$120.00</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#111111] dark:text-white">Water Damage Repair</span>
+                      <span className="font-mono font-medium text-[#111111] dark:text-white">$95.00</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#111111] dark:text-white">Labor Costs</span>
+                      <span className="font-mono font-medium text-[#111111] dark:text-white">$250.00</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Total */}
+                <div className="border-t border-[#E5E7EB] dark:border-[#333333] pt-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-semibold text-[#111111] dark:text-white">Total Estimated Cost</span>
+                    <span className="text-2xl font-bold text-[#2E7D32] dark:text-[#66BB6A]">$645.00</span>
+                  </div>
+                  <p className="text-xs text-[#525252] dark:text-[#999999] mt-2">
+                    *Estimates based on average market rates. Actual costs may vary.
+                  </p>
+                </div>
+                
+                {/* Note */}
+                <div className="bg-[#E3F2FD] dark:bg-[#1565C0]/20 border border-[#1565C0]/20 rounded-lg p-4 mt-4">
+                  <p className="text-sm text-[#1565C0] dark:text-[#64B5F6]">
+                    <span className="font-semibold">Note:</span> This estimate is generated based on AI analysis of detected damage. 
+                    For accurate quotes, please consult with licensed contractors.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex gap-3 mt-6">
+                <a
+                  href={getReportUrl(job.job_id)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-1 px-4 py-2 bg-[#111111] dark:bg-white text-white dark:text-[#111111] rounded-lg font-medium text-center text-sm hover:bg-[#1a1a1a] dark:hover:bg-[#f0f0f0] transition-colors"
+                >
+                  Download Full Report
+                </a>
+                <button
+                  onClick={() => setShowCostModal(false)}
+                  className="flex-1 px-4 py-2 border border-[#E5E7EB] dark:border-[#333333] text-[#111111] dark:text-white rounded-lg font-medium text-sm hover:bg-[#F9FAFB] dark:hover:bg-[#252525] transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }

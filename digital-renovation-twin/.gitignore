@@ -1,2 +1,35 @@
+# Node modules
+node_modules/
 /frontend/node_modules/
-/digital-renovation-twin/frontend/node_modules/
+/builder-frontend/node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+backend/venv/
+venv/
+.env
+*.egg-info/
+
+# Data directories (user uploads, generated reports)
+data/uploads/
+data/reconstructions/
+data/reports/
+
+# Build artifacts
+frontend/.next/
+builder-frontend/dist/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
