@@ -242,13 +242,88 @@ The application supports both light and dark themes. The theme automatically syn
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `OPENAI_API_KEY` | Yes | - | OpenAI API key for Vision API |
+| `OPENAI_API_KEY` | No | - | OpenAI API key for Vision API |
 | `OPENAI_VISION_MODEL` | No | `gpt-4o-mini` | Vision model to use |
+| `DAMAGE_ANALYZER` | No | `mock` | Analyzer mode: `mock`, `openai`, or `replay` |
+| `DATABASE_URL` | No | `sqlite:///./data/facade_risk.db` | Database connection URL |
 | `RECONSTRUCTION_ENGINE` | No | `mock` | Reconstruction engine (mock/external_api/colmap_docker) |
 
-### Mock Mode
+### Damage Analyzer Modes
 
-When `OPENAI_API_KEY` is not set, the system falls back to mock data for development/testing. This allows you to explore the full UI and workflow without API costs.
+The system supports three damage analyzer modes, configurable via `DAMAGE_ANALYZER`:
+
+| Mode | Description |
+|------|-------------|
+| `mock` | Generates realistic synthetic damage data (default, no API cost) |
+| `openai` | Uses OpenAI Vision API for real analysis (requires `OPENAI_API_KEY`) |
+| `replay` | Replays pre-recorded fixtures from `backend/fixtures/damages/` |
+
+### Record & Replay System
+
+For testing and demos, you can use the replay analyzer with pre-recorded fixtures:
+
+1. Place fixture files in `backend/fixtures/damages/`
+2. Set `DAMAGE_ANALYZER=replay`
+3. The analyzer will load `sample_damages.json` or `{job_id}.json`
+
+This allows full pipeline execution with no OpenAI API costs.
+
+---
+
+## CLI Tool
+
+The backend includes a CLI for running analysis from the command line:
+
+```bash
+# Run analysis on a directory of images
+python -m backend.cli run-job ./images --label "Demo Building"
+
+# List all jobs
+python -m backend.cli list-jobs
+
+# Check job status
+python -m backend.cli job-status <job_id>
+
+# Show statistics
+python -m backend.cli stats
+```
+
+---
+
+## Metrics & Monitoring
+
+The `/metrics` endpoint provides operational statistics:
+
+```json
+{
+  "status": "ok",
+  "pipeline_version": "v1.0.0",
+  "damage_analyzer": "mock",
+  "jobs_total": 42,
+  "jobs_completed": 36,
+  "jobs_failed": 3,
+  "jobs_processing": 3
+}
+```
+
+---
+
+## Testing
+
+Run the test suite:
+
+```bash
+cd backend
+pip install pytest
+python -m pytest tests/ -v
+```
+
+Tests cover:
+- Risk scoring calculations
+- Cost estimation logic
+- PDF report generation
+- Full pipeline integration
+- Analyzer factory and modes
 
 ---
 
