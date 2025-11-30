@@ -3,8 +3,9 @@
  * Handles all communication with the Façade Risk Analyzer backend
  */
 
-// Backend URL - defaults to localhost for development
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+// Backend URL - empty string uses relative URLs (proxied by Vite in dev)
+// In production, set VITE_API_BASE_URL to the actual backend URL
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 // ============ Types ============
 
