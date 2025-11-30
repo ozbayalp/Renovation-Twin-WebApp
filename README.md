@@ -14,6 +14,8 @@
 
 Façade Risk Analyzer is a full-stack web application that leverages OpenAI's Vision API (GPT-4o-mini) to analyze building facade images for structural damage. The system automatically detects defects, calculates risk scores, estimates repair costs, and generates comprehensive PDF reports.
 
+> **Note:** This repository is private. A live demo is not publicly hosted due to OpenAI API costs. To try the application, clone the repository and run it locally using the mock analyzer mode (no API key required).
+
 ### Key Features
 
 | Feature | Description |
