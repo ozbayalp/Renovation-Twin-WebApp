@@ -1,24 +1,26 @@
 # Nixpacks configuration for Railway deployment
-# Builds both frontend and backend
+# Builds both frontend and backend in a single service
 
 [phases.setup]
 nixPkgs = ["python312", "nodejs_20"]
 
 [phases.install]
 cmds = [
-    "cd backend && pip install -r requirements.txt",
+    "pip install -r backend/requirements.txt",
     "cd builder-frontend && npm ci"
 ]
 
 [phases.build]
 cmds = [
     "cd builder-frontend && npm run build:client",
-    "mkdir -p static && cp -r builder-frontend/dist/spa/* static/"
+    "mkdir -p static && cp -r builder-frontend/dist/spa/* static/",
+    "mkdir -p data/uploads data/reconstructions data/reports data/tmp"
 ]
 
 [start]
-cmd = "cd backend && python -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"
+cmd = "python -m uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}"
 
 [variables]
 PYTHONPATH = "/app"
 CORS_ALLOW_ALL = "true"
+DAMAGE_ANALYZER = "mock"

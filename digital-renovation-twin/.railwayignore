@@ -1,0 +1,22 @@
+# Railway ignore file
+# These files are not needed during build
+
+# Git
+.git
+
+# Data directories (Railway provides persistent storage)
+data/
+
+# Logs
+*.log
+
+# Local environment
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+
+# Misc
+.DS_Store

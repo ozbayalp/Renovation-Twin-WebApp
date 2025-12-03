@@ -1,0 +1,63 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info
+.eggs
+*.egg
+venv/
+.venv/
+backend/venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+builder-frontend/node_modules/
+.npm
+.pnpm-store
+
+# Build outputs (we rebuild in Docker)
+builder-frontend/dist/
+static/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Data (mounted separately in production)
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Tests (not needed in production image)
+backend/tests/
+**/test_*.py
+**/*_test.py
+
+# Misc
+.DS_Store
+Thumbs.db
