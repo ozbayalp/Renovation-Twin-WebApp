@@ -133,8 +133,9 @@ class PDFBuilder:
     def add_bullet_point(self, text: str, indent: int = 0) -> None:
         self._check_page_break(30)
         x = self.left_margin + indent
-        self._add_text("•", x, self.y, "F1", 11, (0.18, 0.55, 0.34))
-        self._add_text(text, x + 15, self.y, "F1", 11, (0.32, 0.32, 0.32))
+        # Use dash as bullet - more compatible with PDF Type1 fonts
+        self._add_text("-", x, self.y, "F2", 11, (0.18, 0.55, 0.34))
+        self._add_text(text, x + 12, self.y, "F1", 11, (0.32, 0.32, 0.32))
         self.y -= self.line_height + 4
         
     def add_spacer(self, height: int = 20) -> None:
