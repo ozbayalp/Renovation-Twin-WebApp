@@ -14,7 +14,7 @@
 
 Façade Risk Analyzer is a full-stack web application that leverages OpenAI's Vision API (GPT-4o-mini) to analyze building facade images for structural damage. The system automatically detects defects, calculates risk scores, estimates repair costs, and generates comprehensive PDF reports.
 
-> **Note:** This repository is private. A live demo is not publicly hosted due to OpenAI API costs. To try the application, clone the repository and run it locally using the mock analyzer mode (no API key required).
+> **Note:** This application is publicly available. Without an API key, it runs in demo mode with mock data. To use real AI analysis, enter your own OpenAI API key in Settings. Your key is stored locally in your browser and never saved on our servers.
 
 ### Key Features
 
@@ -257,8 +257,18 @@ The system supports three damage analyzer modes, configurable via `DAMAGE_ANALYZ
 | Mode | Description |
 |------|-------------|
 | `mock` | Generates realistic synthetic damage data (default, no API cost) |
-| `openai` | Uses OpenAI Vision API for real analysis (requires `OPENAI_API_KEY`) |
+| `openai` | Uses OpenAI Vision API for real analysis (requires API key) |
 | `replay` | Replays pre-recorded fixtures from `backend/fixtures/damages/` |
+
+### User-Provided API Keys
+
+For public deployments, users can provide their own OpenAI API key:
+
+1. Navigate to **Settings** in the app
+2. Enter your OpenAI API key
+3. The app automatically uses real AI analysis when a key is provided
+
+**Without an API key**, the app runs in demo mode with mock data.
 
 ### Record & Replay System
 
@@ -269,6 +279,27 @@ For testing and demos, you can use the replay analyzer with pre-recorded fixture
 3. The analyzer will load `sample_damages.json` or `{job_id}.json`
 
 This allows full pipeline execution with no OpenAI API costs.
+
+---
+
+## Security
+
+### API Key Handling
+
+User-provided API keys are handled with the following security measures:
+
+| Layer | Security Measure |
+|-------|------------------|
+| **Storage** | Keys stored in browser `sessionStorage` (cleared when tab closes) |
+| **Transmission** | Keys sent via HTTPS headers only, never in URLs or request bodies |
+| **Backend** | Keys processed in-memory only, never logged or persisted |
+| **Logging** | Only boolean flags logged (e.g., "user_api_key=true"), never actual keys |
+
+### User Responsibility
+
+- Users are responsible for the security of their own API keys
+- Users should set usage limits in their OpenAI dashboard
+- Keys should not be shared or used on untrusted devices
 
 ---
 
