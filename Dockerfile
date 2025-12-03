@@ -5,7 +5,8 @@
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app/frontend
 COPY digital-renovation-twin/builder-frontend/package*.json ./
-RUN npm ci --production=false
+# Use npm install instead of npm ci for better compatibility across npm versions
+RUN npm install --legacy-peer-deps
 COPY digital-renovation-twin/builder-frontend/ ./
 RUN npm run build:client
 
