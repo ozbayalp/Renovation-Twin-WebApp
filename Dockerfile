@@ -36,11 +36,11 @@ RUN mkdir -p data/uploads data/reconstructions data/reports data/tmp
 # Environment
 ENV PYTHONPATH=/app \
     PYTHONUNBUFFERED=1 \
-    PORT=8000 \
     CORS_ALLOW_ALL=true \
     DAMAGE_ANALYZER=mock
 
+# Railway assigns PORT dynamically
 EXPOSE 8000
 
-# Start command
-CMD ["python", "-m", "uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start command - use shell form to expand $PORT variable
+CMD python -m uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}
