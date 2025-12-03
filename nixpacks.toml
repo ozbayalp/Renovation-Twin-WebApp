@@ -2,19 +2,20 @@
 # Points to digital-renovation-twin subdirectory
 
 [phases.setup]
-nixPkgs = ["python312", "nodejs_20"]
+nixPkgs = ["python312", "nodejs_20", "gcc"]
+aptPkgs = ["python3-pip"]
 
 [phases.install]
 cmds = [
-    "cd digital-renovation-twin && pip install -r backend/requirements.txt",
+    "python3 -m pip install -r digital-renovation-twin/backend/requirements.txt",
     "cd digital-renovation-twin/builder-frontend && npm ci"
 ]
 
 [phases.build]
 cmds = [
     "cd digital-renovation-twin/builder-frontend && npm run build:client",
-    "cd digital-renovation-twin && mkdir -p static && cp -r builder-frontend/dist/spa/* static/",
-    "cd digital-renovation-twin && mkdir -p data/uploads data/reconstructions data/reports data/tmp",
+    "mkdir -p digital-renovation-twin/static && cp -r digital-renovation-twin/builder-frontend/dist/spa/* digital-renovation-twin/static/",
+    "mkdir -p digital-renovation-twin/data/uploads digital-renovation-twin/data/reconstructions digital-renovation-twin/data/reports digital-renovation-twin/data/tmp",
     "chmod +x digital-renovation-twin/start.sh"
 ]
 
