@@ -1,52 +1,46 @@
-# Multi-stage build for Frontend + Backend (Railway)
-# Build context is repo root
+# Optimized multi-stage build for Railway
+# Uses smaller images and fewer dependencies
 
-# Stage 1: Build frontend
+# Stage 1: Build frontend with node alpine
 FROM node:20-alpine AS frontend-builder
-WORKDIR /app/frontend
+WORKDIR /app
+
+# Copy only package files first for better caching
 COPY digital-renovation-twin/builder-frontend/package*.json ./
-# Use npm install instead of npm ci for better compatibility across npm versions
-RUN npm install --legacy-peer-deps
+
+# Install with reduced features for speed
+RUN npm install --legacy-peer-deps --no-audit --no-fund --prefer-offline 2>/dev/null || npm install --legacy-peer-deps
+
+# Copy source and build
 COPY digital-renovation-twin/builder-frontend/ ./
 RUN npm run build:client
 
-# Stage 2: Python backend with frontend static files
+# Stage 2: Minimal Python runtime
 FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy and install Python dependencies
+# Install Python dependencies (no gcc needed for pre-built wheels)
 COPY digital-renovation-twin/backend/requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --prefer-binary -r requirements.txt
 
 # Copy backend code
 COPY digital-renovation-twin/backend/ ./backend/
 
-# Copy built frontend to static directory
-COPY --from=frontend-builder /app/frontend/dist/spa ./static
+# Copy built frontend
+COPY --from=frontend-builder /app/dist/spa ./static
 
-# Create data directories with proper permissions
-RUN mkdir -p data/uploads data/reconstructions data/reports data/tmp \
-    && chmod -R 755 data
+# Create data directories
+RUN mkdir -p data/uploads data/reconstructions data/reports data/tmp
 
-# Environment variables
-ENV PYTHONPATH=/app
-ENV PYTHONUNBUFFERED=1
-ENV PORT=8000
-ENV CORS_ALLOW_ALL=true
-ENV DAMAGE_ANALYZER=mock
+# Environment
+ENV PYTHONPATH=/app \
+    PYTHONUNBUFFERED=1 \
+    PORT=8000 \
+    CORS_ALLOW_ALL=true \
+    DAMAGE_ANALYZER=mock
 
-# Expose port (Railway uses $PORT)
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT:-8000}/health')" || exit 1
-
-# Run the application
-CMD python -m uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Start command
+CMD ["python", "-m", "uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
