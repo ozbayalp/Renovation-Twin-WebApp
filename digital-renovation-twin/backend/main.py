@@ -5,17 +5,23 @@ AI-powered building facade assessment platform.
 """
 
 import logging
+import os
 import sys
 import traceback
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from backend.api.routes_results import router as results_router
 from backend.api.routes_upload import router as upload_router
 from backend.core.config import DAMAGE_ANALYZER, PIPELINE_VERSION
+
+# Static files directory (built frontend)
+STATIC_DIR = Path(__file__).parent.parent / "static"
 
 # =============================================================================
 # Logging Configuration
@@ -80,6 +86,8 @@ async def log_unhandled_exception(request: Request, exc: Exception):
 # =============================================================================
 # CORS Configuration
 # =============================================================================
+# In production with static serving, CORS is less critical since same-origin
+# But we allow common dev origins and any Railway/Render URLs
 allowed_origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
@@ -90,6 +98,10 @@ allowed_origins = [
     "http://localhost:8081",
     "http://127.0.0.1:8081",
 ]
+
+# Allow all origins if CORS_ALLOW_ALL is set (for Railway/Render deployments)
+if os.environ.get("CORS_ALLOW_ALL", "").lower() in ("true", "1", "yes"):
+    allowed_origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -137,3 +149,22 @@ def metrics():
         "damage_analyzer": DAMAGE_ANALYZER,
         **stats,
     }
+
+
+# =============================================================================
+# Static Frontend Serving (Production)
+# =============================================================================
+# Serve frontend static files if they exist (for containerized deployment)
+if STATIC_DIR.exists():
+    # Mount static assets (JS, CSS, images)
+    app.mount("/assets", StaticFiles(directory=STATIC_DIR / "assets"), name="assets")
+    
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        """Serve the SPA for all non-API routes."""
+        # Check if the file exists in static directory
+        file_path = STATIC_DIR / full_path
+        if file_path.exists() and file_path.is_file():
+            return FileResponse(file_path)
+        # Return index.html for SPA routing
+        return FileResponse(STATIC_DIR / "index.html")
