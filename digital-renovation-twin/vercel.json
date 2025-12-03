@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "framework": null,
+  "installCommand": "cd builder-frontend && npm install",
+  "buildCommand": "cd builder-frontend && npm run build:client",
+  "outputDirectory": "builder-frontend/dist/spa",
+  "rewrites": [
+    {
+      "source": "/((?!assets/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

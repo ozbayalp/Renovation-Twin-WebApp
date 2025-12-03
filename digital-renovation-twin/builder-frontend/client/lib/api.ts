@@ -9,6 +9,19 @@ import { getApiKeyHeaders } from "./apiKey";
 // In production, set VITE_API_BASE_URL to the actual backend URL
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
+/**
+ * Helper to handle fetch errors with better messages
+ */
+async function handleApiError(error: unknown, defaultMessage: string): Promise<never> {
+  if (error instanceof TypeError && error.message.includes("fetch")) {
+    throw new Error("Backend server is not available. Please ensure the backend is running.");
+  }
+  if (error instanceof Error) {
+    throw error;
+  }
+  throw new Error(defaultMessage);
+}
+
 // ============ Types ============
 
 export interface JobOutputs {
@@ -120,14 +133,18 @@ export async function getJobStatus(jobId: string): Promise<JobStatus> {
  * Get all jobs (list endpoint)
  */
 export async function getAllJobs(): Promise<JobStatus[]> {
-  const response = await fetch(`${API_BASE_URL}/jobs`);
+  try {
+    const response = await fetch(`${API_BASE_URL}/jobs`);
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ detail: "Failed to fetch jobs" }));
-    throw new Error(error.detail || "Failed to fetch jobs");
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: "Failed to fetch jobs" }));
+      throw new Error(error.detail || "Failed to fetch jobs");
+    }
+
+    return response.json();
+  } catch (error) {
+    return handleApiError(error, "Failed to fetch jobs");
   }
-
-  return response.json();
 }
 
 /**
