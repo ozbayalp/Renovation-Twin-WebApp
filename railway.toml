@@ -1,0 +1,8 @@
+[build]
+builder = "nixpacks"
+buildCommand = "cd digital-renovation-twin && pip install -r backend/requirements.txt && cd builder-frontend && npm ci && npm run build:client && cd .. && mkdir -p static && cp -r builder-frontend/dist/spa/* static/"
+
+[deploy]
+startCommand = "cd digital-renovation-twin && ./start.sh"
+healthcheckPath = "/health"
+healthcheckTimeout = 30

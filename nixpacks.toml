@@ -1,0 +1,27 @@
+# Nixpacks configuration at repo root
+# Points to digital-renovation-twin subdirectory
+
+[phases.setup]
+nixPkgs = ["python312", "nodejs_20"]
+
+[phases.install]
+cmds = [
+    "cd digital-renovation-twin && pip install -r backend/requirements.txt",
+    "cd digital-renovation-twin/builder-frontend && npm ci"
+]
+
+[phases.build]
+cmds = [
+    "cd digital-renovation-twin/builder-frontend && npm run build:client",
+    "cd digital-renovation-twin && mkdir -p static && cp -r builder-frontend/dist/spa/* static/",
+    "cd digital-renovation-twin && mkdir -p data/uploads data/reconstructions data/reports data/tmp",
+    "chmod +x digital-renovation-twin/start.sh"
+]
+
+[start]
+cmd = "cd digital-renovation-twin && ./start.sh"
+
+[variables]
+PYTHONPATH = "/app/digital-renovation-twin"
+CORS_ALLOW_ALL = "true"
+DAMAGE_ANALYZER = "mock"
