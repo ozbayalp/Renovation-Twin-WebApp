@@ -5,4 +5,4 @@
 mkdir -p data/uploads data/reconstructions data/reports data/tmp
 
 # Start the FastAPI server
-exec python -m uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}
+exec python3 -m uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}
