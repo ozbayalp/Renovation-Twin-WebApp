@@ -3,6 +3,8 @@ export const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://127.0.0.1
 export type JobStatus = {
   job_id: string;
   status: "uploaded" | "processing" | "completed" | "failed";
+  label?: string | null;
+  created_at?: string | null;
   uploaded_files?: string[];
   error?: string | null;
   reconstruction_engine?: string | null;
@@ -49,15 +51,35 @@ async function handleResponse<T>(res: Response): Promise<T> {
   return (await res.json()) as T;
 }
 
-export async function uploadImages(files: File[]): Promise<{ job_id: string; status: JobStatus["status"] }> {
+export async function uploadImages(files: File[], label?: string): Promise<
+  { job_id: string; status: JobStatus["status"]; label?: string | null }
+> {
   const formData = new FormData();
   files.forEach((file) => formData.append("files", file));
+  if (label) {
+    formData.append("label", label);
+  }
 
   const res = await fetch(`${BASE_URL}/jobs`, {
     method: "POST",
     body: formData
   });
 
+  return handleResponse(res);
+}
+
+export type JobSummary = {
+  job_id: string;
+  label?: string | null;
+  created_at?: string | null;
+  status: JobStatus["status"];
+  building_health_grade?: string | null;
+  overall_risk_score?: number | null;
+  total_estimated_cost?: number | null;
+};
+
+export async function listJobs(): Promise<JobSummary[]> {
+  const res = await fetch(`${BASE_URL}/jobs`, { cache: "no-store" });
   return handleResponse(res);
 }
 

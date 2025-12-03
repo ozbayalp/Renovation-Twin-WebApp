@@ -50,17 +50,25 @@ def _encode_image(image_path: Path) -> str:
     return f"data:{mime_type};base64,{data}"
 
 
-def _load_openai_client():
-    """Load and return OpenAI client."""
-    if not os.getenv("OPENAI_API_KEY"):
-        raise DamageAnalysisError("OPENAI_API_KEY environment variable is not set.")
+def _load_openai_client(api_key: Optional[str] = None):
+    """
+    Load and return OpenAI client.
+    
+    Args:
+        api_key: Optional API key override. If not provided, uses OPENAI_API_KEY env var.
+    """
+    key = api_key or os.getenv("OPENAI_API_KEY")
+    if not key:
+        raise DamageAnalysisError(
+            "OpenAI API key is required. Please provide your API key in Settings."
+        )
     try:
         from openai import OpenAI
     except ImportError as exc:
         raise DamageAnalysisError(
             "openai package is not installed. Run `pip install openai`."
         ) from exc
-    return OpenAI()
+    return OpenAI(api_key=key)
 
 
 class OpenAIDamageAnalyzer:
@@ -71,21 +79,23 @@ class OpenAIDamageAnalyzer:
     structured JSON response to extract damage information.
     """
     
-    def __init__(self, model: Optional[str] = None):
+    def __init__(self, model: Optional[str] = None, api_key: Optional[str] = None):
         """
         Initialize the OpenAI analyzer.
         
         Args:
             model: Optional model override (defaults to config value)
+            api_key: Optional API key override (defaults to OPENAI_API_KEY env var)
         """
         self.model = model or OPENAI_VISION_MODEL
+        self._api_key = api_key
         self._client = None
     
     @property
     def client(self):
         """Lazy-load the OpenAI client."""
         if self._client is None:
-            self._client = _load_openai_client()
+            self._client = _load_openai_client(self._api_key)
         return self._client
     
     def _analyze_image(self, image_path: Path) -> List[Dict]:

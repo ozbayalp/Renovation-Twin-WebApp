@@ -4,8 +4,9 @@ import json
 import logging
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Header, HTTPException
 from fastapi.responses import FileResponse
+from typing import Optional
 
 from ..core.config import PIPELINE_VERSION, REPORTS_DIR
 from ..database import (
@@ -93,22 +94,30 @@ def get_job(job_id: str):
 
 
 @router.post("/jobs/{job_id}/process")
-def process_job(job_id: str):
+def process_job(
+    job_id: str,
+    x_openai_api_key: Optional[str] = Header(None, alias="X-OpenAI-API-Key"),
+):
     """
     Process a job through the full analysis pipeline.
     
     Pipeline steps:
     1. Image validation
     2. Reconstruction (mock by default)
-    3. AI damage detection (mock/openai/replay based on DAMAGE_ANALYZER)
+    3. AI damage detection (uses OpenAI if API key provided, otherwise mock)
     4. Cost estimation
     5. Risk scoring
     6. PDF report generation
+    
+    Headers:
+        X-OpenAI-API-Key: Optional OpenAI API key for real AI analysis
     """
     if not job_metadata.job_exists(job_id):
         raise HTTPException(status_code=404, detail="Job not found")
 
-    logger.info("Starting processing for job %s", job_id)
+    # SECURITY: Never log the API key - only log whether one was provided
+    has_user_key = bool(x_openai_api_key)
+    logger.info("Starting processing for job %s (user_api_key=%s)", job_id, has_user_key)
 
     try:
         results = validate_job_images(job_id)
@@ -144,7 +153,8 @@ def process_job(job_id: str):
         )
         
         # Step 2: Damage detection using configured analyzer
-        analyzer = get_damage_analyzer()
+        # If user provides API key, use OpenAI; otherwise use configured default (mock)
+        analyzer = get_damage_analyzer(api_key=x_openai_api_key)
         logger.info("Using damage analyzer: %s", type(analyzer).__name__)
         damages_path = analyzer.analyze(job_id)
         

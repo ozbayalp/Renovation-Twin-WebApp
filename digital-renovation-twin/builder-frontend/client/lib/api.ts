@@ -3,6 +3,8 @@
  * Handles all communication with the Façade Risk Analyzer backend
  */
 
+import { getApiKeyHeaders } from "./apiKey";
+
 // Backend URL - empty string uses relative URLs (proxied by Vite in dev)
 // In production, set VITE_API_BASE_URL to the actual backend URL
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
@@ -146,10 +148,14 @@ export async function verifyJobImages(jobId: string): Promise<ImageVerificationR
 
 /**
  * Start processing a job
+ * Includes OpenAI API key in headers if available for AI features
  */
 export async function processJob(jobId: string): Promise<JobStatus> {
   const response = await fetch(`${API_BASE_URL}/jobs/${jobId}/process`, {
     method: "POST",
+    headers: {
+      ...getApiKeyHeaders(),
+    },
   });
 
   if (!response.ok) {

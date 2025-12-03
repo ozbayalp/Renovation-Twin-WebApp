@@ -1,35 +1,12 @@
-INFO:     Started server process [1681]
+INFO:     Started server process [26830]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     127.0.0.1:49778 - "POST /jobs HTTP/1.1" 201 Created
-INFO:     127.0.0.1:49778 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49780 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49780 - "POST /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98/verify-images HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49787 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49793 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49800 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49807 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49814 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49821 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49831 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49838 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49846 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49852 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49859 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49866 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49873 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49880 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49887 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49894 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49904 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49911 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49917 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49924 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49930 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49937 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49944 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49951 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49780 - "POST /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98/process HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49780 - "GET /jobs/d81a0c1a-646a-43fe-8cf7-29efb54c8b98 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49780 - "GET /Users/alpozbay/Renovation-Twin-WebApp/digital-renovation-twin/data/reconstructions/d81a0c1a-646a-43fe-8cf7-29efb54c8b98/risk_summary.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58123 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58125 - "GET /jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58127 - "OPTIONS /jobs HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:60965 - "GET /jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60965 - "OPTIONS /jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60965 - "DELETE /jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60965 - "GET /jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60972 - "GET /jobs HTTP/1.1" 200 OK
