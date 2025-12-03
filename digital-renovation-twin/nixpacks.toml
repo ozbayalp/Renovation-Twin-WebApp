@@ -14,11 +14,12 @@ cmds = [
 cmds = [
     "cd builder-frontend && npm run build:client",
     "mkdir -p static && cp -r builder-frontend/dist/spa/* static/",
-    "mkdir -p data/uploads data/reconstructions data/reports data/tmp"
+    "mkdir -p data/uploads data/reconstructions data/reports data/tmp",
+    "chmod +x start.sh"
 ]
 
 [start]
-cmd = "python -m uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}"
+cmd = "./start.sh"
 
 [variables]
 PYTHONPATH = "/app"
